@@ -1,13 +1,18 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Pedido {
 
-    private ArrayList<Long> itens;
-    private ArrayList<Integer> quantidade;
+    HashMap<Long,Integer> pedido = new HashMap<Long, Integer>();
 
     public Pedido(ArrayList<Long> itens, ArrayList<Integer> quantidade) {
-        this.itens = itens;
-        this.quantidade = quantidade;
+        for (Long j : itens) {
+            pedido.put(j, quantidade.get(j.intValue()));
+        }
+    }
+
+    public HashMap<Long,Integer> getPedido() {
+        return pedido;
     }
 
 }

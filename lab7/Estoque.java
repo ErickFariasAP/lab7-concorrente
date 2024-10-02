@@ -1,21 +1,23 @@
-import java.util.ArrayList;
-import java.util.concurrent.BlockingQueue;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class Estoque {
+public class Estoque implements Runnable {
 
-    BlockingQueue<Pedido> est1;
-    BlockingQueue<Pedido> est2;
+    ConcurrentHashMap<Long, Integer> estoque;
+    Random random = new Random();
 
-    public Estoque(BlockingQueue<Pedido> est1, BlockingQueue<Pedido> est2) {
-        this.est1 = est1;
-        this.est2 = est2;
+    public Estoque(ConcurrentHashMap<Long, Integer> estoque) {
+        this.estoque = estoque;
     }
 
     @Override
     public void run() {
       try {
-        while(true) {
-        }
+        while (true) {
+            estoque.put(0L, random.nextInt(30));
+            estoque.put(1L, random.nextInt(30));
+            Thread.sleep(10);
+        }  
       } catch (Exception e) {
         e.printStackTrace();
       }
