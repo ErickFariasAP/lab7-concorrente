@@ -3,9 +3,9 @@ import java.util.concurrent.*;
 public class Lab7 {
 
      public static void main(String[] args) {
-        ExecutorService clients = Executors.newCachedThreadPool();
+        ExecutorService clientsThr = Executors.newCachedThreadPool();
         ExecutorService estoqueThr = Executors.newCachedThreadPool();
-        ExecutorService workers = Executors.newCachedThreadPool();
+        ExecutorService workersThr = Executors.newCachedThreadPool();
 
         ConcurrentHashMap<Long, Integer> estoque = new ConcurrentHashMap<Long, Integer>();
 
@@ -13,9 +13,10 @@ public class Lab7 {
 
         try {
             for (int i = 0; i < 10; i++) {
-                clients.execute(new Client(pedidos));
+                clientsThr.execute(new Client(pedidos));
             }
             estoqueThr.execute(new Estoque(estoque));
+            workersThr.execute(new Worker(pedidos, estoque));
             
         } catch (Exception e) {}
      }
