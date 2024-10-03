@@ -16,7 +16,7 @@ public class Estoque implements Runnable {
         while (true) {
             estoque.put(0L, random.nextInt(30));
             estoque.put(1L, random.nextInt(30));
-            Thread.sleep(10);
+            Thread.sleep(1000);
         }  
       } catch (Exception e) {
         e.printStackTrace();
