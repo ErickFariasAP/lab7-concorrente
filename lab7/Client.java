@@ -14,17 +14,18 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
-      try {
-        while(true) {
+      while(true) {
+        try {
             ArrayList<Long> idItens  = new ArrayList<Long>();
             idItens.add(0L); idItens.add(1L);
             ArrayList<Integer> quantidadeItens = new ArrayList<Integer>();
             quantidadeItens.add(random.nextInt(10)); quantidadeItens.add(random.nextInt(10));
             Pedido pedidoAtual = new Pedido(idItens, quantidadeItens);
             pedidos.add(pedidoAtual);
-        }
-      } catch (Exception e) {
+            Thread.sleep(10);
+        } catch (Exception e) {
         e.printStackTrace();
       }
     }
+  }
 }
