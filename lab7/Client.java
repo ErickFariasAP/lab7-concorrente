@@ -24,7 +24,7 @@ public class Client implements Runnable {
             pedidos.add(pedidoAtual);
             Thread.sleep(10);
         } catch (Exception e) {
-        e.printStackTrace();
+        // e.printStackTrace();
       }
     }
   }

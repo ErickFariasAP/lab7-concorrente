@@ -15,4 +15,12 @@ public class Pedido {
         return pedido;
     }
 
+    public Long getValor(){
+        Long valorTotal = 0L;
+        for(var entry: pedido.entrySet()){
+            valorTotal = valorTotal + entry.getKey() * entry.getValue();
+        }
+        return valorTotal;
+    }
+
 }
