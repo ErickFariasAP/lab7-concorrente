@@ -9,7 +9,7 @@ public class Lab7 {
 
         ConcurrentHashMap<Long, Integer> estoque = new ConcurrentHashMap<Long, Integer>();
 
-        BlockingQueue<Pedido> pedidos = new LinkedBlockingDeque<>(1500);
+        BlockingQueue<Pedido> pedidos = new LinkedBlockingDeque<>(100);
 
         AtomicInteger pedidosProcessados = new AtomicInteger(0);
         AtomicInteger valorTotalDasVendas = new AtomicInteger(0);
