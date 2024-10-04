@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,19 +11,22 @@ public class Worker implements Runnable {
     AtomicInteger pedidosProcessados;
     AtomicInteger valorTotalDasVendas;
     AtomicInteger pedidosRejeitados;
+    AtomicInteger workerProcessando;
 
     public Worker(
       BlockingQueue<Pedido> pedidos, 
       ConcurrentHashMap<Long, Integer> estoque,
       AtomicInteger pedidosProcessados,
       AtomicInteger valorTotalDasVendas,
-      AtomicInteger pedidosRejeitados  
+      AtomicInteger pedidosRejeitados,
+      AtomicInteger workerProcessando
     ) {
         this.pedidos = pedidos;
         this.estoque = estoque;
         this.pedidosProcessados = pedidosProcessados;
         this.valorTotalDasVendas = valorTotalDasVendas;
         this.pedidosRejeitados = pedidosRejeitados;
+        this.workerProcessando = workerProcessando;
     }
 
     private boolean incrementEstoque(Long id, Integer quantidade){
@@ -43,33 +45,36 @@ public class Worker implements Runnable {
 
     @Override
     public void run() {
-      try {
-        while (true) {
+        workerProcessando.incrementAndGet();
+        try {
             Pedido pedidoAtual = pedidos.poll();
             HashMap<Long,Integer> pedidoDict = pedidoAtual.getPedido();
             ArrayList<Long> itensJaRemovidos = new ArrayList<>();
             ArrayList<Integer> itensJaRemovidosQtdd = new ArrayList<>();
-            
-            boolean rejected = false;
 
+            boolean ok = true;
             for (Long item: pedidoDict.keySet()){
               if (!incrementEstoque(item, -pedidoDict.get(item))){
                 readdItems(itensJaRemovidos, itensJaRemovidosQtdd);
-                rejected = true;
                 this.pedidosRejeitados.addAndGet(1);
+                ok = false;
                 break;
               }
-              this.pedidosProcessados.addAndGet(1);
-              this.valorTotalDasVendas.addAndGet(pedidoAtual.getValor().intValue());
+
               itensJaRemovidos.add(item);
               itensJaRemovidosQtdd.add(pedidoDict.get(item));
             }
 
-            Thread.sleep(10);
-        }  
-      } catch (Exception e) {
-        // e.printStackTrace();
-      }
-    }
-    
+            if(ok) {
+              this.pedidosProcessados.incrementAndGet();
+              this.valorTotalDasVendas.addAndGet(pedidoAtual.getValor().intValue());
+              System.out.println("Pedido " + pedidoAtual.getId() + " do cliente " + pedidoAtual.getClient().getId() + " processado");
+            }else{
+              System.out.println("Pedido " + pedidoAtual.getId() + " do cliente " + pedidoAtual.getClient().getId() + " rejeitado");
+            }
+        }  catch (Exception e) {
+          //e.printStackTrace();
+        }
+        workerProcessando.decrementAndGet();
+    }    
 }

@@ -13,11 +13,12 @@ public class Estoque implements Runnable {
     @Override
     public void run() {
       try {
-        while (true) {
-            estoque.put(0L, random.nextInt(30));
-            estoque.put(1L, random.nextInt(30));
-            Thread.sleep(1000);
-        }  
+        for(long i = 0; i < 3; i++) {
+          int quantidade = random.nextInt(100);
+          estoque.put(i, quantidade);
+          System.out.println("Estoque Abastecido com " + quantidade + " items do produto " + i);
+          System.out.println();
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
